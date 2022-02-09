@@ -1,0 +1,100 @@
+[
+    {
+        "type": "weapon",
+        "code": "wood_sword",
+        "name": "Sword",
+        "description": "A sword how you can see.",
+        "inventory_icon": "sword-clash-icon.jpeg",
+        "modifiers": [
+            {
+                "attribute": "strength",
+                "value": 1,
+                "operator": "add"
+            }
+        ]
+    },
+    {
+        "type": "helm",
+        "code": "leather_helm",
+        "name": "Leather Helm",
+        "description": "A leather helm to use",
+        "inventory_icon": "light-helm-icon.png",
+        "modifiers": [
+            {
+                "attribute": "defense",
+                "value": 1,
+                "operator": "add"
+            }
+        ]
+    },
+    {
+        "type": "body",
+        "code": "leather_armor",
+        "name": "Leather Armor",
+        "description": "A leather armor to use",
+        "inventory_icon": "trench-body-armor.png",
+        "modifiers": [
+            {
+                "attribute": "defense",
+                "value": 1,
+                "operator": "add"
+            }
+        ]
+    },
+    {
+        "type": "legs",
+        "code": "leather_legs",
+        "name": "Leather Legs",
+        "description": "A leather boots to use",
+        "inventory_icon": "leather-boot.png",
+        "modifiers": [
+            {
+                "attribute": "defense",
+                "value": 1,
+                "operator": "add"
+            }
+        ]
+    },
+    {
+        "type": "acessory",
+        "code": "bronze_ring",
+        "name": "Bronze Ring",
+        "description": "A ring thats seens to be made of bronze",
+        "inventory_icon": "ring.png",
+        "modifiers": [
+            {
+                "attribute": "defense",
+                "value": 0.2,
+                "operator": "add"
+            }
+        ]
+    },
+    {
+        "type": "consumable",
+        "code": "potion",
+        "name": "Potion",
+        "description": "A potion to heal you.",
+        "inventory_icon": "pill-icon.png",
+        "modifiers": [
+            {
+                "attribute": "curr_hp",
+                "value": 1,
+                "operator": "add"
+            }
+        ]
+    },
+    {
+        "type": "skill",
+        "code": "skill_blood_hit",
+        "name": "Blood Hit",
+        "description": "Hit the enemy in the hearth",
+        "inventory_icon": "dripping-knife.png",
+        "modifiers": [
+            {
+                "attribute": "curr_hp",
+                "value": 3,
+                "operator": "sub"
+            }
+        ]
+    }
+]
