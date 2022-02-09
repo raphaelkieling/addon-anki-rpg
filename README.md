@@ -5,7 +5,29 @@ Descriptions:
 - When you finish your `study` you can find a simple lot and receive some items.
 - You can fight with mobs to receive more lot and xp but is going to descrease your energy.
 
+## Features
+> v0.0.1
 ![screenshot](./example.png)
+
+- [x] Inventory
+- [x] Weapon item
+- [x] Acessory item
+- [x] Head item
+- [x] Body item
+- [x] Leg item
+- [x] Consumable items like health pots
+- [x] Skill item
+- [x] Allow item to be a kills usable
+- [x] Equip and unequip items
+- [x] Simple loot system using change by item in the loot box
+- [x] Level up
+- [x] Use pokemon exp progress (the simplest one)
+- [] Increase EXP with the study
+- [] Decrease with errors
+- [] Lot after a session study
+- [] Better lot depending of the cards studied
+- [] Turn based battles!
+- [] Dices animation (or sprites)
 
 Refs:
 - https://gamedevelopment.tutsplus.com/articles/designing-an-rpg-inventory-system-that-fits-echoes-of-eternea--gamedev-14947
