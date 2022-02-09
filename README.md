@@ -5,6 +5,7 @@ Descriptions:
 - When you finish your `study` you can find a simple lot and receive some items.
 - You can fight with mobs to receive more lot and xp but is going to descrease your energy.
 
+![screenshot](./example.png)
 
 Refs:
 - https://gamedevelopment.tutsplus.com/articles/designing-an-rpg-inventory-system-that-fits-echoes-of-eternea--gamedev-14947
