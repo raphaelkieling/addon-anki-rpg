@@ -7,8 +7,6 @@ Descriptions:
 
 ## Features
 > v0.0.1
-![screenshot](./example.png)
-
 - [x] Inventory
 - [x] Weapon item
 - [x] Acessory item
@@ -22,12 +20,14 @@ Descriptions:
 - [x] Simple loot system using change by item in the loot box
 - [x] Level up
 - [x] Use pokemon exp progress (the simplest one)
-- [] Increase EXP with the study
-- [] Decrease with errors
-- [] Lot after a session study
-- [] Better lot depending of the cards studied
-- [] Turn based battles!
-- [] Dices animation (or sprites)
+- [ ] Increase EXP with the study
+- [ ] Decrease with errors
+- [ ] Lot after a session study
+- [ ] Better lot depending of the cards studied
+- [ ] Turn based battles!
+- [ ] Dices animation (or sprites)
+
+![screenshot](./example.png)
 
 Refs:
 - https://gamedevelopment.tutsplus.com/articles/designing-an-rpg-inventory-system-that-fits-echoes-of-eternea--gamedev-14947
