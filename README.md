@@ -12,7 +12,9 @@ Moved to https://github.com/raphaelkieling/addon-anki-rpg/projects/1
 
 ![screenshot](./example.png)
 
-## References that i was studing:
+## References:
+I'm not from the game dev world, so it's comprehensible that I need to study to create this plugin.
+
 - https://gamedevelopment.tutsplus.com/articles/designing-an-rpg-inventory-system-that-fits-echoes-of-eternea--gamedev-14947
 - https://github.com/sivenchinniah/Pokemanki/blob/bafc6940b56c46b8f59f5ac0e228c0c37cadd558/utils.py#L23
 - https://softwareprocess.es/homepage/posts/stats-for-games/
