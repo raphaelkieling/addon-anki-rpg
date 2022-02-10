@@ -1,7 +1,8 @@
 
 
-from typing import List
-from .items import Item
+from .observer import Observable
+from .utils import todict
+from .items import Item, convert_item_from_json, convert_items_from_json
 from aqt.utils import showText
 
 
@@ -41,9 +42,16 @@ class Inventory():
                 return True
         return False
 
+    def fromJSON(self, data):
+        for inventory_item in data["items"]:
+            item = convert_item_from_json(inventory_item["item"])
+            self.items.append(InventoryItem(item, inventory_item["amount"]))
+        return self
 
-class Player():
+
+class Player(Observable):
     def __init__(self, nickname="", level=1, exp=0, inventory: Inventory = Inventory(), stats=None):
+        super().__init__()
         self.nickname = nickname
         self.level = level
         self.exp = exp
@@ -86,6 +94,7 @@ class Player():
     def update_level(self):
         levelByExp = self.calculate_level_by_exp(self.exp)
         self.level = levelByExp
+        self.emit("change")
         return self
 
     def increase_exp(self, value):
@@ -104,19 +113,20 @@ class Player():
 
     def equip(self, id):
         item = self.inventory.get_inventory_item_by_id(id)
-        if len(item.bodyParts) > 0:
+        if len(item.body_parts) > 0:
             empty = []
-            for bodyPart in item.bodyParts:
+            for bodyPart in item.body_parts:
                 if not self.equipments[bodyPart]:
                     empty.append(bodyPart)
 
-            firstBodyPartToUse = item.bodyParts[0]
+            firstBodyPartToUse = item.body_parts[0]
             if len(empty) > 0:
                 firstBodyPartToUse = empty[0]
-                
+
             self.unequip(firstBodyPartToUse)
             self.equipments[firstBodyPartToUse] = item
             self.inventory.remove_item(item)
+        self.emit("change")
         return self
 
     def unequip(self, bodyPart):
@@ -124,11 +134,13 @@ class Player():
         if item:
             self.inventory.receive_item(item, 1)
             self.equipments[bodyPart] = None
+        self.emit("change")
         return self
 
     def receive_loot(self, items):
         for loot in items:
             self.receive_item(loot["item"], loot["amount"])
+        self.emit("change")
         return self
 
     def get_stats(self):
@@ -153,10 +165,12 @@ class Player():
         newStats = item.apply_each_modifier(stats)
         self.set_stats(newStats)
         self.inventory.remove_item(item)
+        self.emit("change")
         return self
 
     def receive_item(self, item, amount):
         self.inventory.receive_item(item, amount)
+        self.emit("change")
         return self
 
     def get_items(self):
@@ -169,5 +183,29 @@ class Player():
             "strength": stats["strength"],
             "defense": stats["defense"],
             "energy": stats["energy"],
+        }
+        self.emit("change")
+        return self
+
+    def toJSON(self):
+        return todict(self)
+
+    def fromJSON(self, data):
+        self.nickname = data["nickname"]
+        self.level = data["level"]
+        self.exp = data["exp"]
+        self.inventory = Inventory().fromJSON(data["inventory"])
+        self.stats = data["stats"]
+        self.equipments = {
+            "hand": convert_item_from_json(data["equipments"]["hand"]),
+            "head": convert_item_from_json(data["equipments"]["head"]),
+            "body": convert_item_from_json(data["equipments"]["body"]),
+            "legs": convert_item_from_json(data["equipments"]["legs"]),
+            "acessory": convert_item_from_json(data["equipments"]["acessory"]),
+            "skill_1": convert_item_from_json(data["equipments"]["skill_1"]),
+            "skill_2": convert_item_from_json(data["equipments"]["skill_2"]),
+            "skill_3": convert_item_from_json(data["equipments"]["skill_3"]),
+            "skill_4": convert_item_from_json(data["equipments"]["skill_4"]),
+            "skill_5": convert_item_from_json(data["equipments"]["skill_5"]),
         }
         return self

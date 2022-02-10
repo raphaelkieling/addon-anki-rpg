@@ -5,6 +5,8 @@ from aqt.utils import showText
 from aqt.reviewer import Reviewer
 from anki.cards import Card
 
+from .config import load_config_state, save_config_prop
+
 from .loot import StartLoot
 
 from .utils import copy_directory
@@ -19,29 +21,42 @@ class AnkiManager():
             exp=0
         )
 
+        self.first_loot = False
+
         self.playerInformationDialog = PlayerInformationDialog(
             mw=mw, player=self.player)
+
+        self.player.subscribe("change", lambda x, y: self.save_state())
 
     def calculate_loot(self):
         pass
 
-    def load_user(self):
+    def load_resources(self):
         copy_directory("rpg_resources")
-        self.player.receive_loot(StartLoot().getLoot())
+
+        self.load_state()
+
+        if self.first_loot is False:
+            save_config_prop("first_loot", True)
+            self.player.receive_loot(StartLoot().getLoot())
 
     def hit_card(self, reviewer: Reviewer, card: Card, ease: int):
         self.player.increase_exp(10)
         self.playerInformationDialog.update_player()
 
-    def start_hooks(self):
-        gui_hooks.reviewer_will_end.append(self.calculate_loot)
-        gui_hooks.reviewer_did_answer_card.append(self.hit_card)
-        gui_hooks.main_window_did_init.append(self.load_user)
-
     def open_stats_window(self):
         self.playerInformationDialog.update_player()
         self.playerInformationDialog.show()
 
+    def save_state(self):
+        save_config_prop("player", self.player.toJSON())
+
+    def load_state(self):
+        state = load_config_state()
+        self.player.fromJSON(state["player"])
+        self.first_loot = state["first_loot"]
+
+    # Only UI logic
     def start_menu(self):
         menu = QAction("Player", mw)
         qconnect(menu.triggered, self.open_stats_window)
@@ -49,6 +64,11 @@ class AnkiManager():
         mw.rpg = QMenu('&RPG', mw)
         mw.rpg.addAction(menu)
         mw.form.menubar.addMenu(mw.rpg)
+
+    def start_hooks(self):
+        gui_hooks.reviewer_will_end.append(self.calculate_loot)
+        gui_hooks.reviewer_did_answer_card.append(self.hit_card)
+        gui_hooks.main_window_did_init.append(self.load_resources)
 
     def start(self):
         self.start_hooks()

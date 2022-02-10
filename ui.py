@@ -2,6 +2,8 @@ from pathlib import Path
 from aqt import QDialog, QIcon, QPixmap, QSize
 from aqt.utils import showText
 
+from .loot import DailyLoot
+
 from .items import TypeConsumableItem
 
 from .player import Player
@@ -74,12 +76,17 @@ class PlayerInformationDialog(QDialog, Ui_Dialog):
         self.equipment_slot_head.clicked.connect(self.unequip_connect("head"))
         self.equipment_slot_acessory_1.clicked.connect(
             self.unequip_connect("acessory"))
+        self.daily_loot_button.clicked.connect(self.daily_loot)
 
     def equip_connect(self, slot_index):
         return lambda x: self.equip_item(slot_index)
 
     def unequip_connect(self, bodyPart):
         return lambda x: self.unequip_item(bodyPart)
+
+    def daily_loot(self):
+        self.player.receive_loot(DailyLoot().getLoot())
+        self.update_player()
 
     def unequip_item(self, bodyPart):
         self.player.unequip(bodyPart)
@@ -97,8 +104,9 @@ class PlayerInformationDialog(QDialog, Ui_Dialog):
 
                 self.update_player()
 
-    def populate_stats(self):
+    def populate_info(self):
         stats = self.player.get_stats()
+        self.nickname_value.setText(self.player.nickname)
         self.health_value.setText(
             str(stats["curr_hp"])+"/"+str(stats["max_hp"]))
         self.strength_value.setText(str(stats["strength"]))
@@ -185,7 +193,7 @@ class PlayerInformationDialog(QDialog, Ui_Dialog):
                     self.put_imagem_button(
                         self.skill_slot_5, item.inventory_icon)
 
-                self.populate_stats()
+                self.populate_info()
 
     def put_imagem_button(self, invetory_slot, inventory_icon_path):
         if inventory_icon_path == None:
@@ -218,5 +226,5 @@ class PlayerInformationDialog(QDialog, Ui_Dialog):
     def update_player(self):
         self.populate_inventory()
         self.populate_equipments()
-        self.populate_stats()
+        self.populate_info()
         return self

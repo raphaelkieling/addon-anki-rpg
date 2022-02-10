@@ -1,10 +1,11 @@
 [
     {
-        "type": "weapon",
+        "type": "equippable",
         "code": "wood_sword",
         "name": "Sword",
         "description": "A sword how you can see.",
         "inventory_icon": "sword-clash-icon.jpeg",
+        "body_parts": ["hand"],
         "modifiers": [
             {
                 "attribute": "strength",
@@ -14,11 +15,12 @@
         ]
     },
     {
-        "type": "helm",
+        "type": "equippable",
         "code": "leather_helm",
         "name": "Leather Helm",
         "description": "A leather helm to use",
         "inventory_icon": "light-helm-icon.png",
+        "body_parts": ["head"],
         "modifiers": [
             {
                 "attribute": "defense",
@@ -28,10 +30,11 @@
         ]
     },
     {
-        "type": "body",
+        "type": "equippable",
         "code": "leather_armor",
         "name": "Leather Armor",
         "description": "A leather armor to use",
+        "body_parts": ["body"],
         "inventory_icon": "trench-body-armor.png",
         "modifiers": [
             {
@@ -42,9 +45,10 @@
         ]
     },
     {
-        "type": "legs",
+        "type": "equippable",
         "code": "leather_legs",
         "name": "Leather Legs",
+        "body_parts": ["legs"],
         "description": "A leather boots to use",
         "inventory_icon": "leather-boot.png",
         "modifiers": [
@@ -56,9 +60,10 @@
         ]
     },
     {
-        "type": "acessory",
+        "type": "equippable",
         "code": "bronze_ring",
         "name": "Bronze Ring",
+        "body_parts": ["acessory"],
         "description": "A ring thats seens to be made of bronze",
         "inventory_icon": "ring.png",
         "modifiers": [

@@ -1,5 +1,5 @@
 import random
-from aqt.utils import showText 
+from aqt.utils import showText
 from .items import get_item_by_code
 
 
@@ -54,6 +54,42 @@ class StartLoot(Loot):
             {
                 "code": "potion",
                 "chance": 100,
+                "min": 4,
+                "max": 5
+            }
+        ])
+
+
+class DailyLoot(Loot):
+    def __init__(self):
+        super().__init__([
+            {
+                "code": "wood_sword",
+                "chance": 30
+            },
+            {
+                "code": "leather_helm",
+                "chance": 30
+            },
+            {
+                "code": "leather_armor",
+                "chance": 30
+            },
+            {
+                "code": "leather_legs",
+                "chance": 30
+            },
+            {
+                "code": "bronze_ring",
+                "chance": 24
+            },
+            {
+                "code": "skill_blood_hit",
+                "chance": 13
+            },
+            {
+                "code": "potion",
+                "chance": 50,
                 "min": 4,
                 "max": 5
             }

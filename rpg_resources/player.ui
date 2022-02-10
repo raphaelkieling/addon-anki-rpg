@@ -35,6 +35,9 @@
      <height>16</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(68, 68, 68);</string>
+   </property>
    <property name="text">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Health:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
@@ -48,6 +51,9 @@
      <height>16</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(68, 68, 68);</string>
+   </property>
    <property name="text">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Strength:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
@@ -60,6 +66,9 @@
      <width>51</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(68, 68, 68);</string>
    </property>
    <property name="text">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Defense:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -75,7 +84,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>100/100</string>
+    <string>0/0</string>
    </property>
   </widget>
   <widget class="QLabel" name="strength_value">
@@ -112,6 +121,9 @@
      <width>51</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(68, 68, 68);</string>
    </property>
    <property name="text">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Energy:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -636,8 +648,8 @@
   <widget class="QPushButton" name="equipment_slot_legs">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>150</y>
+     <x>240</x>
+     <y>160</y>
      <width>61</width>
      <height>61</height>
     </rect>
@@ -667,8 +679,8 @@
   <widget class="QPushButton" name="equipment_slot_body">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>80</y>
+     <x>240</x>
+     <y>90</y>
      <width>61</width>
      <height>61</height>
     </rect>
@@ -698,8 +710,8 @@
   <widget class="QPushButton" name="equipment_slot_head">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>10</y>
+     <x>240</x>
+     <y>20</y>
      <width>61</width>
      <height>61</height>
     </rect>
@@ -729,8 +741,8 @@
   <widget class="QPushButton" name="equipment_slot_acessory_1">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>10</y>
+     <x>170</x>
+     <y>20</y>
      <width>61</width>
      <height>61</height>
     </rect>
@@ -760,8 +772,8 @@
   <widget class="QPushButton" name="equipment_slot_hand">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>80</y>
+     <x>170</x>
+     <y>90</y>
      <width>61</width>
      <height>61</height>
     </rect>
@@ -792,10 +804,13 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>10</y>
+     <y>30</y>
      <width>51</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(68, 68, 68);</string>
    </property>
    <property name="text">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Level:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -805,7 +820,7 @@
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>10</y>
+     <y>30</y>
      <width>51</width>
      <height>16</height>
     </rect>
@@ -1246,6 +1261,45 @@
    </property>
    <property name="text">
     <string>Skills</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="nickname_label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>61</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Nickname:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="nickname_value">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>10</y>
+     <width>51</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>default</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="daily_loot_button">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>200</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Daily Loot</string>
    </property>
   </widget>
  </widget>
