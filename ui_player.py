@@ -356,7 +356,6 @@ class Ui_Dialog(object):
         self.daily_loot_button = QtWidgets.QPushButton(Dialog)
         self.daily_loot_button.setGeometry(QtCore.QRect(10, 200, 75, 23))
         self.daily_loot_button.setObjectName("daily_loot_button")
-
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 

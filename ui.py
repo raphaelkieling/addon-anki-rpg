@@ -1,25 +1,29 @@
-from pathlib import Path
+from datetime import date
 from aqt import QDialog, QIcon, QPixmap, QSize
 from aqt.utils import showText
 
+from .config import load_config_state, save_config_prop
+
 from .loot import DailyLoot
 
-from .items import TypeConsumableItem
+from .items import Item, TypeConsumableItem
 
 from .player import Player
 
 from .utils import get_anki_media_folder
-from .ui_player import Ui_Dialog
+from .ui_player import Ui_Dialog as Ui_PlayerInformationDialog
+from .ui_item_information import Ui_Dialog as Ui_ItemInformationDialog
 import os
 
 
-class PlayerInformationDialog(QDialog, Ui_Dialog):
+class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
     def __init__(self, mw, player):
         super().__init__(mw)
         self.setupUi(self)
         self.setFixedSize(358, 591)
 
         self.player = player
+        self.itemInformation = ItemInformationDialog(mw, player)
 
         self.inventory_slots = [
             self.inventory_slot_1,
@@ -86,6 +90,7 @@ class PlayerInformationDialog(QDialog, Ui_Dialog):
 
     def daily_loot(self):
         self.player.receive_loot(DailyLoot().getLoot())
+        save_config_prop("last_daily_loot", date.today().strftime("%Y-%m-%d"))
         self.update_player()
 
     def unequip_item(self, bodyPart):
@@ -96,6 +101,8 @@ class PlayerInformationDialog(QDialog, Ui_Dialog):
     def equip_item(self, index):
         if index < len(self.player.inventory.items):
             item = self.player.inventory.items[index]
+            self.itemInformation.show_item(item.item)
+
             if item:
                 if isinstance(item.item, TypeConsumableItem):
                     self.player.consume_item(item.item.id)
@@ -223,8 +230,44 @@ class PlayerInformationDialog(QDialog, Ui_Dialog):
             self.put_imagem_button(invetory_slot, item.item.inventory_icon)
         return self
 
+    def update_daily_loot(self):
+        config = load_config_state()
+        if "last_daily_loot" in config:
+            last_daily_loot = config["last_daily_loot"]
+            # get current date in year-month-day format
+            if last_daily_loot == date.today().strftime("%Y-%m-%d"):
+                self.daily_loot_button.setDisabled(True)
+            else:
+                self.daily_loot_button.setDisabled(False)
+
     def update_player(self):
         self.populate_inventory()
         self.populate_equipments()
         self.populate_info()
+        self.update_daily_loot()
         return self
+
+class ItemInformationDialog(QDialog, Ui_ItemInformationDialog):
+    def __init__(self, mw, player):
+        super().__init__(mw)
+        self.player = player
+        self.setupUi(self)
+        self.setFixedSize(297, 235)
+
+    def show_item(self, item: Item):
+        self.put_imagem_button(item.inventory_icon)
+        self.name_value.setText(item.name)
+        self.description_value.setText(item.description)
+        self.modifiers_value.setText(item.description)
+        self.show()
+
+    def put_imagem_button(self, inventory_icon_path):
+        if inventory_icon_path == None:
+            self.item_icon.setIcon(QIcon())
+        else:
+            pixmap = QPixmap(os.path.join(
+                get_anki_media_folder(), "rpg_resources", inventory_icon_path))
+            icon = QIcon()
+            icon.addPixmap(pixmap, QIcon.Normal, QIcon.Off)
+            self.item_icon.setIcon(icon)
+            self.item_icon.setIconSize(QSize(41, 41))
