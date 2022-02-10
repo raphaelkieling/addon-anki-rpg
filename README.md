@@ -1,6 +1,6 @@
 # Anki RPG
 
-Simple RPG turn based to play meanwhile learn something using the anki system. Today this addon keeps in development. Please, feel free to give me a star to let me know that someone is interested.
+Simple RPG turn based to play shile learn something using the anki system. Today this addon keeps in development.
 
 - A `study` is a way to restore energy and helgth. 
 - When you finish your `study` you can find a simple lot and receive some items.
