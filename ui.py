@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from aqt import QDialog, QIcon, QPixmap, QSize
 from aqt.utils import showText
 from .config import load_config_state, save_config_prop
@@ -84,7 +84,7 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
             self.select_item_by_body_part_connect("head"))
         self.equipment_slot_acessory_1.clicked.connect(
             self.select_item_by_body_part_connect("acessory"))
-        self.daily_loot_button.clicked.connect(self.daily_loot)
+        self.daily_loot_button.clicked.connect(self.daily_check)
         self.equip_button.clicked.connect(self.equip_item)
         self.unequip_button.clicked.connect(self.unequip_item)
         self.destroy_button.clicked.connect(self.destroy_item)
@@ -95,9 +95,11 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
     def select_item_by_body_part_connect(self, body_part):
         return lambda x: self.select_item_by_body_part(body_part)
 
-    def daily_loot(self):
+    def daily_check(self):
+        today = date.today()
         self.player.receive_loot(DailyLoot().getLoot())
-        save_config_prop("last_daily_loot", date.today().strftime("%Y-%m-%d"))
+        self.player.update_daily_streak(today)
+        save_config_prop("last_daily_check", today.strftime("%Y-%m-%d"))
         self.update_player()
 
     def destroy_item(self):
@@ -144,6 +146,7 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
         if item:
             if isinstance(item, TypeConsumableItem):
                 self.player.consume_item(item.id)
+                self.clear_selected_item()
             else:
                 result = self.player.equip(item.id)
                 self.select_item_by_body_part(result["body_part"])
@@ -157,99 +160,69 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
             str(stats["curr_hp"])+"/"+str(stats["max_hp"]))
         self.strength_value.setText(str(stats["strength"]))
         self.defense_value.setText(str(stats["defense"]))
+        self.bonus_xp_value.setText("{:.2f}".format(stats["bonus_xp"]))
         self.energy_value.setText(
             str(stats["curr_energy"])+"/"+str(stats["max_energy"]))
 
         # calculate xp to show
         exp_to_next_level = self.player.calculate_exp_by_level(
             self.player.level+1)
-        exp_to_curr_level = self.player.calculate_exp_by_level(
-            self.player.level)
         current_exp = self.player.exp
         self.exp_label.setText(
-            "{} / {} exp".format(str(current_exp), str(exp_to_next_level)))
+            "{:.2f} / {:.2f} exp".format(current_exp, exp_to_next_level))
 
-        percentageExp = (current_exp-exp_to_curr_level) * \
-            100 / (exp_to_next_level-exp_to_curr_level)
-        self.exp_progress_bar.setValue(percentageExp)
+        self.exp_progress_bar.setValue(
+            self.player.calculate_percentage_exp_to_next_level())
 
         self.level_value.setText(str(self.player.level))
 
+        # go to each streak an fill the check box
+        for i in range(Player.MAX_STREAK):
+            item = getattr(self, "streak_check_"+str(i+1))
+            if i <= stats["streak"]:
+                item.setChecked(True)
+            else:
+                item.setChecked(False)
+
     def clear_equipments(self):
         for key in self.player.equipments:
-            if key == "head":
-                self.put_imagem_button(
-                    self.equipment_slot_head, None)
-            if key == "left_hand":
-                self.put_imagem_button(
-                    self.equipment_slot_hand_left, None)
-            if key == "right_hand":
-                self.put_imagem_button(
-                    self.equipment_slot_hand_right, None)
-            if key == "body":
-                self.put_imagem_button(
-                    self.equipment_slot_body, None)
-            if key == "legs":
-                self.put_imagem_button(
-                    self.equipment_slot_legs, None)
-            if key == "acessory":
-                self.put_imagem_button(
-                    self.equipment_slot_acessory_1, None)
-            if key == "skill_1":
-                self.put_imagem_button(self.skill_slot_1, None)
-            if key == "skill_2":
-                self.put_imagem_button(
-                    self.skill_slot_2, None)
-            if key == "skill_3":
-                self.put_imagem_button(
-                    self.skill_slot_3, None)
-            if key == "skill_4":
-                self.put_imagem_button(
-                    self.skill_slot_4, None)
-            if key == "skill_5":
-                self.put_imagem_button(
-                    self.skill_slot_5, None)
+            slot = self.resolve_body_part_to_slot(key)
+            self.put_imagem_button(slot, None)
+            self.populate_user_info()
         return self
+
+    def resolve_body_part_to_slot(self, body_part):
+        if body_part == "head":
+            return self.equipment_slot_head
+        if body_part == "left_hand":
+            return self.equipment_slot_hand_left
+        if body_part == "right_hand":
+            return self.equipment_slot_hand_right
+        if body_part == "body":
+            return self.equipment_slot_body
+        if body_part == "legs":
+            return self.equipment_slot_legs
+        if body_part == "acessory":
+            return self.equipment_slot_acessory_1
+        if body_part == "skill_1":
+            return self.skill_slot_1
+        if body_part == "skill_2":
+            return self.skill_slot_2
+        if body_part == "skill_3":
+            return self.skill_slot_3
+        if body_part == "skill_4":
+            return self.skill_slot_4
+        if body_part == "skill_5":
+            return self.skill_slot_5
+        return None
 
     def populate_equipments(self):
         self.clear_equipments()
         for key in self.player.equipments:
             if self.player.equipments[key]:
                 item = self.player.equipments[key]
-                if key == "head":
-                    self.put_imagem_button(
-                        self.equipment_slot_head, item.inventory_icon)
-                if key == "left_hand":
-                    self.put_imagem_button(
-                        self.equipment_slot_hand_left, item.inventory_icon)
-                if key == "right_hand":
-                    self.put_imagem_button(
-                        self.equipment_slot_hand_right, item.inventory_icon)
-                if key == "body":
-                    self.put_imagem_button(
-                        self.equipment_slot_body, item.inventory_icon)
-                if key == "legs":
-                    self.put_imagem_button(
-                        self.equipment_slot_legs, item.inventory_icon)
-                if key == "acessory":
-                    self.put_imagem_button(
-                        self.equipment_slot_acessory_1, item.inventory_icon)
-                if key == "skill_1":
-                    self.put_imagem_button(
-                        self.skill_slot_1, item.inventory_icon)
-                if key == "skill_2":
-                    self.put_imagem_button(
-                        self.skill_slot_2, item.inventory_icon)
-                if key == "skill_3":
-                    self.put_imagem_button(
-                        self.skill_slot_3, item.inventory_icon)
-                if key == "skill_4":
-                    self.put_imagem_button(
-                        self.skill_slot_4, item.inventory_icon)
-                if key == "skill_5":
-                    self.put_imagem_button(
-                        self.skill_slot_5, item.inventory_icon)
-
+                slot = self.resolve_body_part_to_slot(key)
+                self.put_imagem_button(slot, item.inventory_icon)
                 self.populate_user_info()
 
     def put_imagem_button(self, invetory_slot, inventory_icon_path):
@@ -280,14 +253,13 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
             self.put_imagem_button(invetory_slot, item.item.inventory_icon)
         return self
 
-    def update_daily_loot(self):
+    def update_daily_check(self):
         config = load_config_state()
-        if "last_daily_loot" in config:
-            last_daily_loot = config["last_daily_loot"]
-            if last_daily_loot == date.today().strftime("%Y-%m-%d"):
-                self.daily_loot_button.setDisabled(True)
-            else:
-                self.daily_loot_button.setDisabled(False)
+        last_daily_check = config["last_daily_check"]
+        if last_daily_check is not None and last_daily_check.date() == date.today():
+            self.daily_loot_button.setDisabled(True)
+        else:
+            self.daily_loot_button.setDisabled(False)
 
     def show_info_item(self):
         if self.selected_item:
@@ -342,6 +314,6 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
         self.populate_inventory()
         self.populate_equipments()
         self.populate_user_info()
-        self.update_daily_loot()
+        self.update_daily_check()
         self.update_selected_item_info()
         return self

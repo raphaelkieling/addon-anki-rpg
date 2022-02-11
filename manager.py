@@ -73,11 +73,15 @@ class AnkiManager():
 
     # Only UI logic
     def start_menu(self):
-        menu = QAction("Player", mw)
-        qconnect(menu.triggered, self.open_stats_window)
+        playerAction = QAction("Player", mw)
+        qconnect(playerAction.triggered, self.open_stats_window)
+
+        reloadAction = QAction("Reload config", mw)
+        qconnect(reloadAction.triggered, self.load_state)
 
         mw.rpg = QMenu('&RPG', mw)
-        mw.rpg.addAction(menu)
+        mw.rpg.addAction(playerAction)
+        mw.rpg.addAction(reloadAction)
         mw.form.menubar.addMenu(mw.rpg)
 
     def start_hooks(self):

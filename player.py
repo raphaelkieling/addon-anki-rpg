@@ -1,10 +1,9 @@
-
-
 from .observer import Observable
 from .utils import todict
 from .items import Item, convert_item_from_json, convert_items_from_json
 from aqt.utils import showText
 import math
+import datetime
 
 
 class InventoryItem():
@@ -57,12 +56,16 @@ class Inventory():
 
 
 class Player(Observable):
+    MAX_STREAK = 36
+    STREAK_DATE_FORMAT = "%Y-%m-%d"
+
     def __init__(self, nickname="", level=1, exp=0, inventory: Inventory = Inventory(), stats=None):
         super().__init__()
         self.nickname = nickname
         self.level = level
         self.exp = exp
         self.inventory = inventory
+        self.streak_history = []
 
         if stats is None:
             self.stats = {
@@ -72,6 +75,8 @@ class Player(Observable):
                 "defense": 2,
                 "curr_energy": 10,
                 "max_energy": 10,
+                "bonus_xp": 0,
+                "streak": 0
             }
         else:
             self.stats = stats
@@ -96,6 +101,58 @@ class Player(Observable):
     def calculate_exp_by_level(self, level: int) -> float:
         return 4 * pow(level, 3) / 5
 
+    def calculate_percentage_exp_to_next_level(self) -> float:
+        exp_to_next_level = self.calculate_exp_by_level(self.level+1)
+        exp_to_curr_level = self.calculate_exp_by_level(self.level)
+        current_exp = self.exp
+        return (current_exp-exp_to_curr_level) * 100 / (exp_to_next_level-exp_to_curr_level)
+
+    def get_daily_streak_status(self, date: datetime.date) -> str:
+        if len(self.streak_history) == 0:
+            return "ok"
+
+        last = datetime.datetime.strptime(
+            self.streak_history[-1], Player.STREAK_DATE_FORMAT).date()
+        today = date
+        yesterday = today - datetime.timedelta(days=1)
+
+        if today == last:
+            return "ignore"
+        elif yesterday == last:
+            return "ok"
+        else:
+            return "break"
+
+    def update_daily_streak(self, today_reference: datetime.date):
+        status = self.get_daily_streak_status(today_reference)
+
+        if status == "ok":
+            self.daily_streak()
+        elif status == "break":
+            self.reset_daily_streak()
+        elif status == "ignore":
+            pass
+
+        self.streak_history.append(
+            today_reference.strftime(Player.STREAK_DATE_FORMAT))
+
+        self.emit("change")
+
+    def daily_streak(self):
+        self.stats["streak"] += 1
+        if self.stats["streak"] > Player.MAX_STREAK:
+            self.stats["streak"] = Player.MAX_STREAK
+        self.stats["bonus_xp"] = self.stats["streak"] * 0.2
+        self.emit("change")
+        return self
+
+    def reset_daily_streak(self):
+        self.stats["streak"] = 0
+        self.stats["bonus_xp"] = 0
+        self.streak_history = []
+        self.emit("change")
+        return self
+
     # just inverse the function above
     def calculate_level_by_exp(self, exp: float) -> int:
         return math.floor(((5 * exp) / 4)**(1/3))
@@ -107,7 +164,7 @@ class Player(Observable):
         return self
 
     def increase_exp_by_ease(self, ease: int):
-        self.increase_exp(7 * (ease * 1.1))
+        self.increase_exp((7 * (ease * 1.1)) * (1 + self.stats["bonus_xp"]))
 
     def increase_exp(self, value):
         self.exp += value
@@ -210,6 +267,8 @@ class Player(Observable):
             "defense": stats["defense"],
             "curr_energy": stats["curr_energy"],
             "max_energy": stats["max_energy"],
+            "bonus_xp": stats["bonus_xp"],
+            "streak": stats["streak"],
         }
         self.emit("change")
         return self
@@ -223,6 +282,7 @@ class Player(Observable):
         self.exp = data["exp"]
         self.inventory = Inventory().fromJSON(data["inventory"])
         self.stats = data["stats"]
+        self.streak_history = data["streak_history"]
         self.equipments = {
             "left_hand": convert_item_from_json(data["equipments"]["left_hand"]),
             "right_hand": convert_item_from_json(data["equipments"]["right_hand"]),
