@@ -9,8 +9,7 @@ Simple local RPG turn-based to play while learn something using the anki system.
 ## Versions
 Moved to https://github.com/raphaelkieling/addon-anki-rpg/projects/1
 
-> v0.0.1-alpha
-<img height="300px" src="./example.png">
+<img height="300px" src="./example-01.png">
 
 ## References:
 I'm not from the game dev world, so it's comprehensible that I need to study to create this plugin.
