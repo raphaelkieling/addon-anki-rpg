@@ -21,3 +21,4 @@ I'm not from the game dev world, so it's comprehensible that I need to study to 
 - https://www.youtube.com/watch?v=d7L0em4ik3M&list=TLPQMDEwNDIwMjCCanyLpLMh1A
 - https://medium.com/@guilhermegm/unity-simple-loot-system-d181220e6542
 - https://game-icons.net/
+- https://www.youtube.com/watch?v=OUlxP4rZap0
