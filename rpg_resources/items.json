@@ -5,7 +5,10 @@
         "name": "Sword",
         "description": "A sword how you can see.",
         "inventory_icon": "sword-clash-icon.jpeg",
-        "body_parts": ["hand"],
+        "body_parts": [
+            "left_hand",
+            "right_hand"
+        ],
         "modifiers": [
             {
                 "attribute": "strength",
@@ -20,7 +23,9 @@
         "name": "Leather Helm",
         "description": "A leather helm to use",
         "inventory_icon": "light-helm-icon.png",
-        "body_parts": ["head"],
+        "body_parts": [
+            "head"
+        ],
         "modifiers": [
             {
                 "attribute": "defense",
@@ -34,7 +39,9 @@
         "code": "leather_armor",
         "name": "Leather Armor",
         "description": "A leather armor to use",
-        "body_parts": ["body"],
+        "body_parts": [
+            "body"
+        ],
         "inventory_icon": "trench-body-armor.png",
         "modifiers": [
             {
@@ -48,7 +55,9 @@
         "type": "equippable",
         "code": "leather_legs",
         "name": "Leather Legs",
-        "body_parts": ["legs"],
+        "body_parts": [
+            "legs"
+        ],
         "description": "A leather boots to use",
         "inventory_icon": "leather-boot.png",
         "modifiers": [
@@ -63,13 +72,20 @@
         "type": "equippable",
         "code": "bronze_ring",
         "name": "Bronze Ring",
-        "body_parts": ["acessory"],
-        "description": "A ring thats seens to be made of bronze",
+        "body_parts": [
+            "acessory"
+        ],
+        "description": "A ring thats seens to be made of bronze. Hmm, i'm felling more motivated.",
         "inventory_icon": "ring.png",
         "modifiers": [
             {
                 "attribute": "defense",
                 "value": 0.2,
+                "operator": "add"
+            },
+            {
+                "attribute": "max_energy",
+                "value": 1,
                 "operator": "add"
             }
         ]
@@ -99,6 +115,39 @@
                 "attribute": "curr_hp",
                 "value": 3,
                 "operator": "sub"
+            }
+        ]
+    },
+    {
+        "type": "consumable",
+        "code": "chocolate_bar",
+        "name": "Chocolate Bar",
+        "description": "A simple chocolate bar that seems to be good for energy and health.",
+        "inventory_icon": "chocolate-bar.png",
+        "modifiers": [
+            {
+                "attribute": "curr_energy",
+                "value": 1,
+                "operator": "add"
+            },
+            {
+                "attribute": "curr_hp",
+                "value": 2,
+                "operator": "add"
+            }
+        ]
+    },
+    {
+        "type": "consumable",
+        "code": "coffee_cup",
+        "name": "Coffe Cup",
+        "description": "A delicious cup of coffee. Very good for energy!",
+        "inventory_icon": "coffee-cup.png",
+        "modifiers": [
+            {
+                "attribute": "curr_energy",
+                "value": 3,
+                "operator": "add"
             }
         ]
     }

@@ -1,17 +1,20 @@
 from aqt import gui_hooks, mw, qconnect
 from aqt.qt import *
 from aqt.utils import showText
+from PyQt5.QtMultimedia import QSound
+
 
 from aqt.reviewer import Reviewer
 from anki.cards import Card
 
 from .config import load_config_state, save_config_prop
 
-from .loot import StartLoot
+from .loot import CardStudyLoot, StartLoot
 
-from .utils import copy_directory
+from .utils import copy_directory, get_file_from_resource
 from .ui import PlayerInformationDialog
 from .player import Player
+import os
 
 
 class AnkiManager():
@@ -27,9 +30,22 @@ class AnkiManager():
             mw=mw, player=self.player)
 
         self.player.subscribe("change", lambda x, y: self.save_state())
+        self.player.subscribe("destroy_item", lambda x,
+                              y: self.play_destroy_sound())
+
+    def play_destroy_sound(self):
+        QSound.play(
+            get_file_from_resource(os.path.join("sounds", "delete_item.wav")))
 
     def calculate_loot(self):
-        pass
+        loots = CardStudyLoot().getLoot()
+        showText(str(loots))
+        self.player.receive_loot(loots)
+        self.playerInformationDialog.update_player()
+
+    def on_did_answer_card(self, reviewer: Reviewer, card: Card, ease: int):
+        self.hit_card(ease)
+        self.calculate_loot()
 
     def load_resources(self):
         copy_directory("rpg_resources")
@@ -40,9 +56,8 @@ class AnkiManager():
             save_config_prop("first_loot", True)
             self.player.receive_loot(StartLoot().getLoot())
 
-    def hit_card(self, reviewer: Reviewer, card: Card, ease: int):
-        self.player.increase_exp(10)
-        self.playerInformationDialog.update_player()
+    def hit_card(self, ease: int):
+        self.player.increase_exp_by_ease(ease)
 
     def open_stats_window(self):
         self.playerInformationDialog.update_player()
@@ -66,9 +81,8 @@ class AnkiManager():
         mw.form.menubar.addMenu(mw.rpg)
 
     def start_hooks(self):
-        gui_hooks.reviewer_will_end.append(self.calculate_loot)
-        gui_hooks.reviewer_did_answer_card.append(self.hit_card)
-        gui_hooks.main_window_did_init.append(self.load_resources)
+        gui_hooks.reviewer_did_answer_card.append(self.on_did_answer_card)
+        gui_hooks.profile_did_open.append(self.load_resources)
 
     def start(self):
         self.start_hooks()

@@ -1,7 +1,7 @@
+from .player import Player
 from aqt import mw
 config = mw.addonManager.getConfig(__name__)
 
-from .player import Player
 
 def save_config_prop(prop, value):
     config[prop] = value
@@ -16,8 +16,11 @@ def get_config_prop(prop):
 
 def load_config_state():
     resolved_config = {}
+
     if "player" in config:
         resolved_config["player"] = config["player"]
+    else:
+        resolved_config["player"] = Player().toJSON()
 
     if "last_daily_loot" in config:
         resolved_config["last_daily_loot"] = config["last_daily_loot"]

@@ -86,7 +86,7 @@ class TypeSkillItem(Item):
     def __init__(self, code, name, description, inventory_icon):
         super().__init__("skill", code, name, description, inventory_icon, [])
         self.body_parts = ["skill_1", "skill_2",
-                          "skill_3", "skill_4", "skill_5"]
+                           "skill_3", "skill_4", "skill_5"]
 
 
 # read items.json file and map to a item
@@ -120,7 +120,7 @@ def convert_item_from_json(item):
             item["code"], item["name"], item["description"],
             item["inventory_icon"])
     elif item["type"] == "consumable":
-        TypeConsumableItem(
+        return TypeConsumableItem(
             item["code"], item["name"], item["description"], item["inventory_icon"], modifiers)
     return None
 
