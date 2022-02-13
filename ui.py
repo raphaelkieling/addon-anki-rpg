@@ -319,6 +319,10 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
     def update_selected_item_info(self):
         self.show_info_item()
 
+    def update_fight(self):
+        self.empty_fight.show()
+        self.fight_frame.hide()
+
     def update_distribute_points(self):
         self.distribute_poits_button.hide()
         if self.player.available_points_to_distribute > 0:
@@ -332,6 +336,7 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
         self.update_daily_check()
         self.update_selected_item_info()
         self.update_distribute_points()
+        self.update_fight()
         return self
 
 class PlayerStatsDistributeDialog(QDialog,Ui_PlayerStatsDistributeDialog):
