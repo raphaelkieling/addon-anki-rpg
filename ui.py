@@ -7,6 +7,7 @@ from .items import TypeConsumableItem
 from .player import Player
 from .utils import get_anki_media_folder, get_file_from_resource
 from .ui_player import Ui_Dialog as Ui_PlayerInformationDialog
+from .ui_stats_distribute import Ui_Dialog as Ui_PlayerStatsDistributeDialog
 import os
 from PyQt5.QtMultimedia import QSound
 
@@ -15,9 +16,11 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
     def __init__(self, mw, player):
         super().__init__(mw)
         self.setupUi(self)
-        self.setFixedSize(609, 591)
+        self.setFixedSize(804, 591)
 
         self.player = player
+
+        self.dialogPlayerStatsDistribution = PlayerStatsDistributeDialog(mw, player)
 
         self.selected_item = None
         self.selected_item_to_equip = False
@@ -88,6 +91,9 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
         self.equip_button.clicked.connect(self.equip_item)
         self.unequip_button.clicked.connect(self.unequip_item)
         self.destroy_button.clicked.connect(self.destroy_item)
+        self.distribute_poits_button.clicked.connect(self.dialogPlayerStatsDistribution.show)
+
+        self.player.subscribe("change", lambda x, y: self.update_player())
 
     def select_item_by_index_connect(self, slot_index):
         return lambda x: self.select_item_by_index(slot_index)
@@ -123,8 +129,8 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
         return self
 
     def select_item_by_index(self, index):
-        if index < len(self.player.inventory.items):
-            item = self.player.inventory.items[index]
+        item = self.player.inventory.get_item_by_index(index)
+        if item is not None:
             self.selected_item = item.item
             self.selected_item_body_part = None
         else:
@@ -244,12 +250,15 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
 
     def populate_inventory(self):
         self.clear_inventory_slots()
-        for i, item in enumerate(self.player.inventory.items):
-            invetory_slot = self.inventory_slots[i]
-            invetory_slot_label = self.inventory_value_label_slots[i]
-
+        for item in self.player.get_items():
+            invetory_slot = self.inventory_slots[item.position]
+            invetory_slot_label = self.inventory_value_label_slots[item.position]
             invetory_slot_label.setText(str(item.amount))
-            invetory_slot_label.show()
+
+            if item.amount > 1:
+                invetory_slot_label.show()
+            else:
+                invetory_slot_label.hide()
             self.put_imagem_button(invetory_slot, item.item.inventory_icon)
         return self
 
@@ -310,10 +319,88 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
     def update_selected_item_info(self):
         self.show_info_item()
 
+    def update_distribute_points(self):
+        self.distribute_poits_button.hide()
+        if self.player.available_points_to_distribute > 0:
+            self.distribute_poits_button.show()
+            self.distribute_poits_button.setText("Distribute {} points".format(self.player.available_points_to_distribute))
+
     def update_player(self):
         self.populate_inventory()
         self.populate_equipments()
         self.populate_user_info()
         self.update_daily_check()
         self.update_selected_item_info()
+        self.update_distribute_points()
         return self
+
+class PlayerStatsDistributeDialog(QDialog,Ui_PlayerStatsDistributeDialog):
+    def __init__(self, mw, player):
+        super().__init__(mw)
+        self.setupUi(self)
+        self.setFixedSize(238, 220)
+        self.player = player
+        self.stats = None
+        self.current_stats = None
+        self.current_used = 0
+        self.stats_to_update = [
+            "max_hp",
+            "strength",
+            "defense",
+            "max_energy",
+        ]
+        self.update()
+
+        for stat in self.stats_to_update:
+            getattr(self, "{}_add".format(stat)).clicked.connect(self.add_stat_connect(stat))
+        
+        for stat in self.stats_to_update:
+            getattr(self, "{}_sub".format(stat)).clicked.connect(self.sub_stat_connect(stat))
+
+        self.done_button.clicked.connect(self.done_handle)
+
+    def done_handle(self, x):
+        self.player.set_stats_by_points(self.current_stats, self.current_used)
+        self.close()
+        self.current_used = 0
+
+    def cancel(self):
+        self.close()
+        self.current_used = 0
+
+    def add_stat_connect(self, stat):
+        return lambda x: self.add_stat(stat)
+
+    def add_stat(self, stat):
+        if self.current_used < self.player.available_points_to_distribute:
+            self.current_stats[stat] += 1
+            self.current_used += 1
+        self.update()
+
+    def sub_stat_connect(self, stat):
+        return lambda x: self.sub_stat(stat)
+
+    def sub_stat(self, stat):
+        if self.current_used > 0 and self.current_stats[stat] > self.stats[stat]:
+            self.current_stats[stat] -= 1
+            self.current_used -= 1
+        self.update()
+
+    def show(self):
+        self.stats = self.player.stats.copy()
+        self.current_stats = self.player.stats.copy()
+
+        self.update()
+        super().show()
+        
+    def update(self):
+        current_remaining_points = self.player.available_points_to_distribute - self.current_used
+        if self.current_stats is not None and self.stats is not None:
+            for stat in self.stats_to_update:
+                value = self.current_stats[stat]
+                getattr(self, "{}_value".format(stat)).setText(str(value))
+                getattr(self, "{}_add".format(stat)).setDisabled(current_remaining_points <= 0)
+                getattr(self, "{}_sub".format(stat)).setDisabled(value <= self.stats[stat])
+
+        self.available_value.setText(str(current_remaining_points))
+        

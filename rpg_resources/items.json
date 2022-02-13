@@ -5,6 +5,7 @@
         "name": "Sword",
         "description": "A sword how you can see.",
         "inventory_icon": "sword-clash-icon.jpeg",
+        "groupable": false,
         "body_parts": [
             "left_hand",
             "right_hand"
@@ -23,6 +24,7 @@
         "name": "Leather Helm",
         "description": "A leather helm to use",
         "inventory_icon": "light-helm-icon.png",
+        "groupable": false,
         "body_parts": [
             "head"
         ],
@@ -39,6 +41,7 @@
         "code": "leather_armor",
         "name": "Leather Armor",
         "description": "A leather armor to use",
+        "groupable": false,
         "body_parts": [
             "body"
         ],
@@ -55,6 +58,7 @@
         "type": "equippable",
         "code": "leather_legs",
         "name": "Leather Legs",
+        "groupable": false,
         "body_parts": [
             "legs"
         ],
@@ -72,6 +76,7 @@
         "type": "equippable",
         "code": "bronze_ring",
         "name": "Bronze Ring",
+        "groupable": false,
         "body_parts": [
             "acessory"
         ],
@@ -94,6 +99,7 @@
         "type": "consumable",
         "code": "potion",
         "name": "Potion",
+        "groupable": true,
         "description": "A potion to heal you.",
         "inventory_icon": "pill-icon.png",
         "modifiers": [
@@ -108,6 +114,7 @@
         "type": "skill",
         "code": "skill_blood_hit",
         "name": "Blood Hit",
+        "groupable": false,
         "description": "Hit the enemy in the hearth",
         "inventory_icon": "dripping-knife.png",
         "modifiers": [
@@ -124,6 +131,7 @@
         "name": "Chocolate Bar",
         "description": "A simple chocolate bar that seems to be good for energy and health.",
         "inventory_icon": "chocolate-bar.png",
+        "groupable": true,
         "modifiers": [
             {
                 "attribute": "curr_energy",
@@ -143,6 +151,7 @@
         "name": "Coffe Cup",
         "description": "A delicious cup of coffee. Very good for energy!",
         "inventory_icon": "coffee-cup.png",
+        "groupable": true,
         "modifiers": [
             {
                 "attribute": "curr_energy",

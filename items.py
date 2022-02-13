@@ -38,7 +38,7 @@ class ItemAttributeModifier():
 
 
 class Item():
-    def __init__(self, type, code, name, description, inventory_icon, modifiers):
+    def __init__(self, type, code, name, description, inventory_icon, modifiers, groupable):
         self.id = str(uuid.uuid4())
         self.code = code
         self.type = type
@@ -46,6 +46,7 @@ class Item():
         self.description = description
         self.modifiers = modifiers
         self.inventory_icon = inventory_icon
+        self.groupable = groupable
 
     def apply_each_modifier(self, stats):
         for modifier in self.modifiers:
@@ -63,28 +64,29 @@ class Item():
             name=data["name"],
             description=data["description"],
             inventory_icon=data["inventory_icon"],
-            modifiers=data["modifiers"]
+            modifiers=data["modifiers"],
+            groupable=data["groupable"]
         )
 
 # Category
 
 
 class TypeEquippableItem(Item):
-    def __init__(self, code, name, description, inventory_icon, modifiers, body_parts):
+    def __init__(self, code, name, description, inventory_icon, modifiers, body_parts, groupable):
         super().__init__("equippable", code, name,
-                         description, inventory_icon, modifiers)
+                         description, inventory_icon, modifiers, groupable)
         self.body_parts = body_parts
 
 
 class TypeConsumableItem(Item):
-    def __init__(self, code, name, description, inventory_icon, modifiers):
-        super().__init__("consumable", code, name, description, inventory_icon, modifiers)
+    def __init__(self, code, name, description, inventory_icon, modifiers, groupable):
+        super().__init__("consumable", code, name, description, inventory_icon, modifiers, groupable)
         self.body_parts = None
 
 
 class TypeSkillItem(Item):
-    def __init__(self, code, name, description, inventory_icon):
-        super().__init__("skill", code, name, description, inventory_icon, [])
+    def __init__(self, code, name, description, inventory_icon, groupable):
+        super().__init__("skill", code, name, description, inventory_icon, [], groupable)
         self.body_parts = ["skill_1", "skill_2",
                            "skill_3", "skill_4", "skill_5"]
 
@@ -114,14 +116,14 @@ def convert_item_from_json(item):
     if item["type"] == "equippable":
         return TypeEquippableItem(
             item["code"], item["name"], item["description"],
-            item["inventory_icon"], modifiers, body_parts)
+            item["inventory_icon"], modifiers, body_parts, item["groupable"])
     elif item["type"] == "skill":
         return TypeSkillItem(
             item["code"], item["name"], item["description"],
-            item["inventory_icon"])
+            item["inventory_icon"], item["groupable"])
     elif item["type"] == "consumable":
         return TypeConsumableItem(
-            item["code"], item["name"], item["description"], item["inventory_icon"], modifiers)
+            item["code"], item["name"], item["description"], item["inventory_icon"], modifiers, item["groupable"])
     return None
 
 

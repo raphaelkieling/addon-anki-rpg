@@ -39,7 +39,6 @@ class AnkiManager():
 
     def calculate_loot(self):
         loots = CardStudyLoot().getLoot()
-        showText(str(loots))
         self.player.receive_loot(loots)
         self.playerInformationDialog.update_player()
 

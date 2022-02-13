@@ -7,31 +7,57 @@ import datetime
 
 
 class InventoryItem():
-    def __init__(self, item: Item, amount: int):
+    def __init__(self, item: Item, amount: int, position: int):
         self.item = item
         self.amount = amount
+        self.position = position
 
 
 class Inventory():
-    def __init__(self):
-        self.items = []
+    MAX_INVENTORY_SIZE = 20
 
-    def receive_item(self, item: Item, amount: int):
+    def __init__(self):
+        self.items = list([])
+
+    def receive_item(self, item: Item, amount: int, force_index = None):
+        empty_slot = self.get_empty_slot()
+
+        if force_index is not None:
+            empty_slot = force_index
+
+        if item.groupable is False:
+            self.items.append(InventoryItem(item, 1, empty_slot))
+            return self
+
         alreadyExist = False
         for inventory_item in self.items:
-            if inventory_item.item.code == item.code:
+            if inventory_item is not None and inventory_item.item.code == item.code:
                 inventory_item.amount += 1
                 alreadyExist = True
 
         if not alreadyExist:
-            self.items.append(InventoryItem(item, amount))
+            self.items.append(InventoryItem(item, amount, empty_slot))
         return self
+
+    def get_empty_slot(self) -> int:
+        for i in range(Inventory.MAX_INVENTORY_SIZE):
+            item = self.get_item_by_index(i)
+            if item is None:
+                return i
+
+        return None
 
     def get_inventory_item_by_id(self, id):
         for item in self.items:
-            if item.item.id == id:
+            if item is not None and item.item.id == id:
                 return item.item
         return None
+
+    def get_item_by_index(self, index: int):
+        items = list(filter(lambda i: i.position == index, self.items))
+        if len(items) > 0:
+            return items[0]
+        return  None
 
     def get_index_by_item(self, item: Item):
         for index, inventory_item in enumerate(self.items):
@@ -40,18 +66,19 @@ class Inventory():
         return -1
 
     def remove_item(self, item: Item):
-        for inventory_item in self.items:
-            if inventory_item.item.id == item.id:
+        for index, inventory_item in enumerate(self.items):
+            if inventory_item is not None and inventory_item.item.id == item.id:
                 inventory_item.amount -= 1
                 if inventory_item.amount <= 0:
-                    self.items.remove(inventory_item)
+                    del self.items[index]
                 return True
         return False
 
     def fromJSON(self, data):
         for inventory_item in data["items"]:
-            item = convert_item_from_json(inventory_item["item"])
-            self.items.append(InventoryItem(item, inventory_item["amount"]))
+            if inventory_item is not None:
+                item = convert_item_from_json(inventory_item["item"])
+                self.items.append(InventoryItem(item, inventory_item["amount"], inventory_item["position"]))
         return self
 
 
@@ -66,6 +93,7 @@ class Player(Observable):
         self.exp = exp
         self.inventory = inventory
         self.streak_history = []
+        self.available_points_to_distribute = 0
 
         if stats is None:
             self.stats = {
@@ -159,6 +187,10 @@ class Player(Observable):
 
     def update_level(self):
         levelByExp = self.calculate_level_by_exp(self.exp)
+        # if levelByExp is not the same as the current level, update
+        # the available_points_to_distribute with the difference
+        if levelByExp != self.level and levelByExp > self.level:
+            self.available_points_to_distribute += levelByExp - self.level
         self.level = levelByExp
         self.emit("change")
         return self
@@ -195,6 +227,7 @@ class Player(Observable):
             self.unequip(firstBodyPartToUse)
             self.equipments[firstBodyPartToUse] = item
             self.inventory.remove_item(item)
+            self.emit("change")
             return {
                 "body_part": firstBodyPartToUse,
                 "item": item
@@ -222,7 +255,7 @@ class Player(Observable):
 
     def receive_loot(self, items):
         for loot in items:
-            self.receive_item(loot["item"], loot["amount"])
+            self.inventory.receive_item(loot["item"], loot["amount"])
         self.emit("change")
         return self
 
@@ -257,7 +290,7 @@ class Player(Observable):
         return self
 
     def get_items(self):
-        return self.inventory.items
+        return list(filter(lambda i: i is not None, self.inventory.items))
 
     def set_stats(self, stats):
         self.stats = {
@@ -273,6 +306,11 @@ class Player(Observable):
         self.emit("change")
         return self
 
+    def set_stats_by_points(self,stats, used_points):
+        self.available_points_to_distribute -= used_points
+        self.set_stats(stats)
+        self.emit("change")
+
     def toJSON(self):
         return todict(self)
 
@@ -280,6 +318,7 @@ class Player(Observable):
         self.nickname = data["nickname"]
         self.level = data["level"]
         self.exp = data["exp"]
+        self.available_points_to_distribute = data["available_points_to_distribute"]
         self.inventory = Inventory().fromJSON(data["inventory"])
         self.stats = data["stats"]
         self.streak_history = data["streak_history"]
