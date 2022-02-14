@@ -2174,7 +2174,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QDial" name="dial">
+  <widget class="QDial" name="fight_dial">
    <property name="geometry">
     <rect>
      <x>530</x>
@@ -2216,7 +2216,7 @@
     <string>Hard</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="daily_loot_button_3">
+  <widget class="QPushButton" name="single_fight_button">
    <property name="geometry">
     <rect>
      <x>370</x>
@@ -2317,7 +2317,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QPushButton" name="item_icon_2">
+    <widget class="QPushButton" name="enemy_icon">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -2384,7 +2384,7 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Defense:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
-    <widget class="QLabel" name="level_value_3">
+    <widget class="QLabel" name="enemy_strength_value">
      <property name="geometry">
       <rect>
        <x>80</x>
@@ -2397,7 +2397,7 @@
       <string>0</string>
      </property>
     </widget>
-    <widget class="QLabel" name="level_value_5">
+    <widget class="QLabel" name="enemy_defense_value">
      <property name="geometry">
       <rect>
        <x>80</x>
@@ -2410,7 +2410,7 @@
       <string>0</string>
      </property>
     </widget>
-    <widget class="QProgressBar" name="progressBar">
+    <widget class="QProgressBar" name="enemy_health_bar">
      <property name="geometry">
       <rect>
        <x>10</x>

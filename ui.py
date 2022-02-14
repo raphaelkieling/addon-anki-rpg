@@ -1,6 +1,8 @@
 from datetime import date, timedelta
 from aqt import QDialog, QIcon, QPixmap, QSize
 from aqt.utils import showText
+
+from .battle import BattleManager
 from .config import load_config_state, save_config_prop
 from .loot import DailyLoot
 from .items import TypeConsumableItem
@@ -21,6 +23,7 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
         self.player = player
 
         self.dialogPlayerStatsDistribution = PlayerStatsDistributeDialog(mw, player)
+        self.battleManager = BattleManager(player)
 
         self.selected_item = None
         self.selected_item_to_equip = False
@@ -92,6 +95,7 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
         self.unequip_button.clicked.connect(self.unequip_item)
         self.destroy_button.clicked.connect(self.destroy_item)
         self.distribute_poits_button.clicked.connect(self.dialogPlayerStatsDistribution.show)
+        self.single_fight_button.clicked.connect(self.find_single_fight)
 
         self.player.subscribe("change", lambda x, y: self.update_player())
 
@@ -100,6 +104,10 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
 
     def select_item_by_body_part_connect(self, body_part):
         return lambda x: self.select_item_by_body_part(body_part)
+
+    def find_single_fight(self):
+        self.battleManager.find_single_fight()
+        self.update_fight()
 
     def daily_check(self):
         today = date.today()
@@ -316,12 +324,31 @@ class PlayerInformationDialog(QDialog, Ui_PlayerInformationDialog):
             self.item_icon.setIcon(icon)
             self.item_icon.setIconSize(QSize(41, 41))
 
+    def populate_enemy_icon(self, enemy_icon):
+        if enemy_icon == None:
+            self.enemy_icon.setIcon(QIcon())
+        else:
+            pixmap = QPixmap(os.path.join(
+                get_anki_media_folder(), "rpg_resources", "enemies", enemy_icon))
+            icon = QIcon()
+            icon.addPixmap(pixmap, QIcon.Normal, QIcon.Off)
+            self.enemy_icon.setIcon(icon)
+            self.enemy_icon.setIconSize(QSize(151, 151))
+
     def update_selected_item_info(self):
         self.show_info_item()
 
     def update_fight(self):
-        self.empty_fight.show()
-        self.fight_frame.hide()
+        if self.battleManager.is_running:
+            self.empty_fight.hide()
+            self.fight_frame.show()
+            self.enemy_strength_value.setText(str(self.battleManager.get_enemy().strength))
+            self.enemy_defense_value.setText(str(self.battleManager.get_enemy().defense))
+            self.enemy_health_bar.setValue(self.battleManager.get_enemy().health)
+            self.populate_enemy_icon(self.battleManager.get_enemy().icon)
+        else:
+            self.empty_fight.show()
+            self.fight_frame.hide()
 
     def update_distribute_points(self):
         self.distribute_poits_button.hide()
@@ -397,7 +424,7 @@ class PlayerStatsDistributeDialog(QDialog,Ui_PlayerStatsDistributeDialog):
 
         self.update()
         super().show()
-        
+
     def update(self):
         current_remaining_points = self.player.available_points_to_distribute - self.current_used
         if self.current_stats is not None and self.stats is not None:

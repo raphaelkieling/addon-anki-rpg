@@ -159,7 +159,7 @@
         "type": "consumable",
         "code": "flaw_energy_potion",
         "name": "Flaw Energy Potion",
-        "description": "A simple energy potion that seems to be good for energy and health. Enough.",
+        "description": "A simple energy potion that seems to be good for energy. Enough.",
         "inventory_icon": "potion_01b.png",
         "groupable": true,
         "modifiers": [
@@ -257,14 +257,14 @@
         ],
         "modifiers": [
             {
-                "attribute": "defense",
+                "attribute": "strength",
                 "value": 2,
                 "operator": "add"
             },
             {
-                "attribute": "energy",
+                "attribute": "curr_energy",
                 "value": 2,
-                "operator": "energy"
+                "operator": "add"
             }
         ],
         "loot": {

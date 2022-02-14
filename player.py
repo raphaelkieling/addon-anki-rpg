@@ -87,7 +87,6 @@ class Inventory():
                 self.items.append(InventoryItem(item, inventory_item["amount"], inventory_item["position"]))
         return self
 
-
 class Player(Observable):
     MAX_STREAK = 36
     STREAK_DATE_FORMAT = "%Y-%m-%d"
@@ -316,6 +315,11 @@ class Player(Observable):
         self.available_points_to_distribute -= used_points
         self.set_stats(stats)
         self.emit("change")
+
+    def receive_damage(self, damage):
+        self.stats["curr_hp"] = self.resolve_hp_value(-damage)
+        self.emit("change")
+        return self
 
     def toJSON(self):
         return todict(self)

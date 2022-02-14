@@ -1,0 +1,12 @@
+[
+    {
+        "code": "skeleton-monster",
+        "name": "Skeleton Monster",
+        "icon": "skeleton.png",
+        "stats": {
+            "hp": 10,
+            "defense": 1,
+            "strength": 1
+        }
+    }
+]
