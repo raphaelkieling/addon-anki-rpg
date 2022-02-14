@@ -1,12 +1,22 @@
 import random
 from aqt.utils import showText
-from .items import get_item_by_code
+from .items import get_item_by_code, get_all_items_json
 
 
 class Loot():
-    def __init__(self, loots):
+    def __init__(self, loots=None):
         self.loots = loots
-        self.index_loots = [[i] for i in range(len(loots))]
+        if self.loots is None:
+            self.loots = []
+            for item in get_all_items_json():
+                loot_config = item["loot"]
+                self.loots.append({
+                    "code": item["code"],
+                    "weight": loot_config["weight"],
+                    "min": loot_config["min"],
+                    "max": loot_config["max"]
+                })
+        self.index_loots = [[i] for i in range(len(self.loots))]
 
     def getLoot(self):
         total = 0
@@ -35,131 +45,14 @@ class Loot():
 
 class StartLoot(Loot):
     def __init__(self):
-        super().__init__([
-            {
-                "code": "wood_sword",
-                "weight": 100
-            },
-            {
-                "code": "leather_helm",
-                "weight": 100
-            },
-            {
-                "code": "leather_armor",
-                "weight": 100
-            },
-            {
-                "code": "leather_legs",
-                "weight": 100
-            },
-            {
-                "code": "bronze_ring",
-                "weight": 100
-            },
-            {
-                "code": "skill_blood_hit",
-                "weight": 100
-            },
-            {
-                "code": "potion",
-                "weight": 100,
-                "min": 4,
-                "max": 5
-            }
-        ])
+        super().__init__()
 
 
 class DailyLoot(Loot):
     def __init__(self):
-        super().__init__([
-            {
-                "code": "wood_sword",
-                "weight": 30
-            },
-            {
-                "code": "leather_helm",
-                "weight": 30
-            },
-            {
-                "code": "leather_armor",
-                "weight": 30
-            },
-            {
-                "code": "leather_legs",
-                "weight": 30
-            },
-            {
-                "code": "bronze_ring",
-                "weight": 24
-            },
-            {
-                "code": "skill_blood_hit",
-                "weight": 13
-            },
-            {
-                "code": "potion",
-                "weight": 50,
-                "min": 4,
-                "max": 5
-            },
-            {
-                "code": "chocolate_bar",
-                "weight": 50,
-                "min": 1,
-                "max": 5
-            },
-            {
-                "code": "coffee_cup",
-                "weight": 80,
-                "min": 1,
-                "max": 2
-            }
-        ])
+        super().__init__()
 
 
 class CardStudyLoot(Loot):
     def __init__(self):
-        super().__init__([
-            {
-                "code": "wood_sword",
-                "weight": 30
-            },
-            {
-                "code": "leather_helm",
-                "weight": 30
-            },
-            {
-                "code": "leather_armor",
-                "weight": 30
-            },
-            {
-                "code": "leather_legs",
-                "weight": 30
-            },
-            {
-                "code": "bronze_ring",
-                "weight": 55
-            },
-            {
-                "code": "skill_blood_hit",
-                "weight": 70
-            },
-            {
-                "code": "potion",
-                "weight": 10,
-                "min": 1,
-                "max": 5
-            },
-            {
-                "code": "chocolate_bar",
-                "weight": 50,
-                "min": 1,
-                "max": 5
-            },
-            {
-                "code": "coffee_cup",
-                "weight": 80,
-                "min": 1,
-                "max": 2
-            }
-        ])
+        super().__init__()

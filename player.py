@@ -19,7 +19,13 @@ class Inventory():
     def __init__(self):
         self.items = list([])
 
+    def is_full(self):
+        return len(self.items) >= Inventory.MAX_INVENTORY_SIZE
+
     def receive_item(self, item: Item, amount: int, force_index = None):
+        if self.is_full():
+            return self
+        
         empty_slot = self.get_empty_slot()
 
         if force_index is not None:

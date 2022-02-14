@@ -1,10 +1,10 @@
 [
     {
         "type": "equippable",
-        "code": "wood_sword",
-        "name": "Sword",
-        "description": "A sword how you can see.",
-        "inventory_icon": "sword-clash-icon.jpeg",
+        "code": "sword-simple",
+        "name": "Simple Sword",
+        "description": "Simple but works.",
+        "inventory_icon": "sword_01b.png",
         "groupable": false,
         "body_parts": [
             "left_hand",
@@ -16,14 +16,19 @@
                 "value": 1,
                 "operator": "add"
             }
-        ]
+        ],
+        "loot": {
+            "weight": 100,
+            "min": 1,
+            "max": 1
+        }
     },
     {
         "type": "equippable",
-        "code": "leather_helm",
-        "name": "Leather Helm",
-        "description": "A leather helm to use",
-        "inventory_icon": "light-helm-icon.png",
+        "code": "bronze_helm",
+        "name": "Bronze helm",
+        "description": "A bronze helm to use",
+        "inventory_icon": "helmet_01a.png",
         "groupable": false,
         "body_parts": [
             "head"
@@ -34,81 +39,101 @@
                 "value": 1,
                 "operator": "add"
             }
-        ]
+        ],
+        "loot": {
+            "weight": 100,
+            "min": 1,
+            "max": 1
+        }
     },
     {
         "type": "equippable",
-        "code": "leather_armor",
-        "name": "Leather Armor",
-        "description": "A leather armor to use",
+        "code": "bronze_armor",
+        "name": "Bronze Armor",
+        "description": "A bronze armor to use",
         "groupable": false,
         "body_parts": [
             "body"
         ],
-        "inventory_icon": "trench-body-armor.png",
+        "inventory_icon": "armor_01a.png",
         "modifiers": [
             {
                 "attribute": "defense",
                 "value": 1,
                 "operator": "add"
             }
-        ]
+        ],
+        "loot": {
+            "weight": 100,
+            "min": 1,
+            "max": 1
+        }
     },
     {
         "type": "equippable",
-        "code": "leather_legs",
-        "name": "Leather Legs",
+        "code": "bronze_boots",
+        "name": "Bronze Boots",
         "groupable": false,
         "body_parts": [
             "legs"
         ],
-        "description": "A leather boots to use",
-        "inventory_icon": "leather-boot.png",
+        "description": "A Bronze boots to use",
+        "inventory_icon": "bronze_01a.png",
         "modifiers": [
             {
                 "attribute": "defense",
                 "value": 1,
                 "operator": "add"
             }
-        ]
+        ],
+        "loot": {
+            "weight": 100,
+            "min": 1,
+            "max": 1
+        }
     },
     {
         "type": "equippable",
-        "code": "bronze_ring",
-        "name": "Bronze Ring",
+        "code": "necklace_01a",
+        "name": "Simple Necklace",
         "groupable": false,
         "body_parts": [
             "acessory"
         ],
-        "description": "A ring thats seens to be made of bronze. Hmm, i'm felling more motivated.",
-        "inventory_icon": "ring.png",
+        "description": "A very simple necklace.",
+        "inventory_icon": "necklace_01a.png",
         "modifiers": [
             {
                 "attribute": "defense",
                 "value": 0.2,
                 "operator": "add"
-            },
-            {
-                "attribute": "max_energy",
-                "value": 1,
-                "operator": "add"
             }
-        ]
+        ],
+        "loot": {
+            "weight": 100,
+            "min": 1,
+            "max": 2
+        }
     },
     {
         "type": "consumable",
-        "code": "potion",
-        "name": "Potion",
+        "code": "low_health_potion",
+        "name": "Low Health Potion",
         "groupable": true,
-        "description": "A potion to heal you.",
-        "inventory_icon": "pill-icon.png",
+        "description": "A potion to heal you. I think.",
+        "inventory_icon": "potion_01a.png",
         "modifiers": [
             {
                 "attribute": "curr_hp",
                 "value": 1,
                 "operator": "add"
             }
-        ]
+        ],
+        "loot": {
+            "weight": 100,
+            "min": 1,
+            "max": 1
+        }
     },
     {
         "type": "skill",
@@ -123,41 +148,129 @@
                 "value": 3,
                 "operator": "sub"
             }
-        ]
+        ],
+        "loot": {
+            "weight": 100,
+            "min": 1,
+            "max": 1
+        }
     },
     {
         "type": "consumable",
-        "code": "chocolate_bar",
-        "name": "Chocolate Bar",
-        "description": "A simple chocolate bar that seems to be good for energy and health.",
-        "inventory_icon": "chocolate-bar.png",
+        "code": "flaw_energy_potion",
+        "name": "Flaw Energy Potion",
+        "description": "A simple energy potion that seems to be good for energy and health. Enough.",
+        "inventory_icon": "potion_01b.png",
         "groupable": true,
         "modifiers": [
             {
                 "attribute": "curr_energy",
                 "value": 1,
                 "operator": "add"
-            },
+            }
+        ],
+        "loot": {
+            "weight": 100,
+            "min": 1,
+            "max": 1
+        }
+    },
+    {
+        "type": "equippable",
+        "code": "iron_helmet",
+        "name": "Iron Helmet",
+        "description": "TODO",
+        "inventory_icon": "helmet_01b.png",
+        "groupable": false,
+        "body_parts": [
+            "head"
+        ],
+        "modifiers": [
             {
-                "attribute": "curr_hp",
+                "attribute": "defense",
                 "value": 2,
                 "operator": "add"
             }
-        ]
+        ],
+        "loot": {
+            "weight": 100,
+            "min": 1,
+            "max": 1
+        }
     },
     {
-        "type": "consumable",
-        "code": "coffee_cup",
-        "name": "Coffe Cup",
-        "description": "A delicious cup of coffee. Very good for energy!",
-        "inventory_icon": "coffee-cup.png",
-        "groupable": true,
+        "type": "equippable",
+        "code": "iron_boot",
+        "name": "Iron Boot",
+        "description": "TODO",
+        "inventory_icon": "boots_01b.png",
+        "groupable": false,
+        "body_parts": [
+            "legs"
+        ],
         "modifiers": [
             {
-                "attribute": "curr_energy",
-                "value": 3,
+                "attribute": "defense",
+                "value": 2,
                 "operator": "add"
             }
-        ]
+        ],
+        "loot": {
+            "weight": 100,
+            "min": 1,
+            "max": 1
+        }
+    },
+    {
+        "type": "equippable",
+        "code": "iron_armor",
+        "name": "Iron Armor",
+        "description": "TODO",
+        "inventory_icon": "armor_01b.png",
+        "groupable": false,
+        "body_parts": [
+            "body"
+        ],
+        "modifiers": [
+            {
+                "attribute": "defense",
+                "value": 2,
+                "operator": "add"
+            }
+        ],
+        "loot": {
+            "weight": 100,
+            "min": 1,
+            "max": 1
+        }
+    },
+    {
+        "type": "equippable",
+        "code": "energy_sword",
+        "name": "Energy Sword",
+        "description": "A sword that seems to be made of iron but with a energy aura around it.",
+        "inventory_icon": "sword_01c.png",
+        "groupable": false,
+        "body_parts": [
+            "left_hand",
+            "right_hand"
+        ],
+        "modifiers": [
+            {
+                "attribute": "defense",
+                "value": 2,
+                "operator": "add"
+            },
+            {
+                "attribute": "energy",
+                "value": 2,
+                "operator": "energy"
+            }
+        ],
+        "loot": {
+            "weight": 100,
+            "min": 1,
+            "max": 1
+        }
     }
 ]

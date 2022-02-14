@@ -91,12 +91,14 @@ class TypeSkillItem(Item):
                            "skill_3", "skill_4", "skill_5"]
 
 
+def get_all_items_json():
+    with open(get_file_from_resource("items.json"), "r") as f:
+        return json.load(f)
+
+
 # read items.json file and map to a item
 def get_all_items():
-    items = []
-    with open(get_file_from_resource("items.json"), "r") as f:
-        item_list = json.load(f)
-        items = convert_items_from_json(item_list)
+    items = convert_items_from_json(get_all_items_json())
     return items
 
 
