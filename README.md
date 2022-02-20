@@ -1,6 +1,6 @@
 # Anki RPG
 
-Simple local RPG turn-based to play while learn something using the anki system. Today this addon keeps in development.
+Simple local RPG turn-based to play while learn something using the anki system. Currently this addon keeps in development.
 
 Features:
 - Inventory
