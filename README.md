@@ -2,9 +2,13 @@
 
 Simple local RPG turn-based to play while learn something using the anki system. Today this addon keeps in development.
 
-- A `study` is a way to restore energy and helgth. 
-- When you finish your `study` you can find a simple lot and receive some items.
-- You can fight with mobs to receive more lot and xp but is going to descrease your energy.
+Features:
+- Inventory
+- Daily Check
+- Turn-Based Battle!
+- Loot
+- HotStreak (check every day to earn a bonus XP)
+- XP and Loot during the study session
 
 ## Versions
 Moved to https://github.com/raphaelkieling/addon-anki-rpg/projects/1
